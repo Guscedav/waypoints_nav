@@ -1,6 +1,6 @@
 <package>
   <name>waypoints_nav</name>
-  <version>0.1.0</version>
+  <version>0.3.0</version>
   <description>
       This package is based on the follow_waypoints package (https://github.com/danielsnider/follow_waypoints).
       The package has been modified in order to accept PoseStamped instead of PoseWithCovarianceStamped messages.
