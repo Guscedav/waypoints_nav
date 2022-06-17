@@ -1,10 +1,12 @@
 <package>
-  <name>follow_waypoints</name>
-  <version>0.3.0</version>
+  <name>waypoints_nav</name>
+  <version>0.1.0</version>
   <description>
-      The follow_waypoints node will listen for waypoints given as
-      poses and when instructed will follow them one by one by publishing goals
-      to move_base.
+      This package is based on the follow_waypoints package (https://github.com/danielsnider/follow_waypoints).
+      The package has been modified in order to accept PoseStamped instead of PoseWithCovarianceStamped messages.
+      Furthermore, it has been extended to allow the navigation following the waypoints in both directions.
+      This means, that it is possible to start the navigation towards the goal, and then to go back to the starting position
+      via the same waypoints.
   </description>
   <maintainer email="danielsnider12@gmail.com">Daniel Snider</maintainer>
   <author email="danielsnider12@gmail.com">Daniel Snider</author>

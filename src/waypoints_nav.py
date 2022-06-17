@@ -39,7 +39,7 @@ def changePose(waypoint,target_frame):
 
 
 #Path for saving and retreiving the pose.csv file 
-output_file_path = rospkg.RosPack().get_path('follow_waypoints')+"/saved_path/pose.csv"
+output_file_path = rospkg.RosPack().get_path('waypoints_nav')+"/saved_path/pose.csv"
 waypoints = []
 
 class FollowPath(State):
@@ -148,7 +148,7 @@ class GetPath(State):
         self.start_journey_bool = False
 
         # Start thread to listen start_jorney 
-        # for loading the saved poses from follow_waypoints/saved_path/poses.csv
+        # for loading the saved poses from waypoints_nav/saved_path/poses.csv
         def wait_for_start_journey():
             """thread worker function"""
             data_from_start_journey = rospy.wait_for_message('start_journey', Empty)
@@ -210,7 +210,7 @@ class PathComplete(State):
         return 'success'
 
 def main():
-    rospy.init_node('follow_waypoints')
+    rospy.init_node('waypoints_nav')
 
     sm = StateMachine(outcomes=['success'])
 
