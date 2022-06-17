@@ -190,8 +190,8 @@ class GetPath(State):
                     # continue  # no new waypoint within timeout, looping...
                 # else:
                     # raise e
-                
-            rospy.loginfo("Recieved new waypoint")
+
+            rospy.loginfo("Received new waypoint")
             waypoints.append(changePose(pose, "map"))
             # publish waypoint queue as pose array so that you can see them in rviz, etc.
             self.poseArray_publisher.publish(convert_PoseWithCovArray_to_PoseArray(waypoints))
