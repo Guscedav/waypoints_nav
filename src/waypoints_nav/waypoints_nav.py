@@ -61,16 +61,16 @@ class Operations(State):
 
     def execute(self, userdata):
         # Start thread to listen for get track messages to clear the waypoint queue
-        def wait_for_start_tracking():
+        def wait_for_start_tracker():
             """thread worker function"""
             while not rospy.is_shutdown():
-                data = rospy.wait_for_message('/start_tracking', Empty)
+                data = rospy.wait_for_message('/start_tracker', Empty)
                 self.start_tracking_topic = 1
                 rospy.sleep(3) # Wait 3 seconds because `rostopic echo` latches
                                # for three seconds and wait_for_message() in a
                                # loop will see it again.
                 self.start_tracking_topic = 0
-        reset_thread = threading.Thread(target=wait_for_start_tracking)
+        reset_thread = threading.Thread(target=wait_for_start_tracker)
         reset_thread.start()
 
         # Start thread to listen for get nav messages to clear the waypoint queue
@@ -152,8 +152,7 @@ class GetTrack(State):
         # Also will save the clicked path to pose.csv file
         def wait_for_path_ready():
             """thread worker function"""
-            data = rospy.wait_for_message('/stop_tracking', Empty)
-            rospy.loginfo('Received Stop Tracking message')
+            data = rospy.wait_for_message('/stop_tracker', Empty)
             self.path_ready = True
             with open(output_file_path, 'w') as file:
                 for current_pose in waypoints:
@@ -167,13 +166,24 @@ class GetTrack(State):
         # Wait for published waypoints or saved path  loaded
         while (not self.path_ready):
             try:
-                pose = rospy.wait_for_message(topic, PoseWithCovarianceStamped, timeout=1)
+                pose_tmp = rospy.wait_for_message(topic, PoseStamped, timeout=1)
             except rospy.ROSException as e:
             	continue
                 # if 'timeout exceeded' in e.message:
                     # continue  # no new waypoint within timeout, looping...
                 # else:
                     # raise e
+            
+            #Convert PoseStamped to PoseWithCovariance Stamped
+            pose = PoseWithCovarianceStamped()
+            pose.header.frame_id = pose_tmp.header.frame_id
+            pose.pose.pose.position.x     =    pose_tmp.pose.position.x
+            pose.pose.pose.position.y     =    pose_tmp.pose.position.y
+            pose.pose.pose.position.z     =    pose_tmp.pose.position.z
+            pose.pose.pose.orientation.x = pose_tmp.pose.orientation.x
+            pose.pose.pose.orientation.y = pose_tmp.pose.orientation.y
+            pose.pose.pose.orientation.z = pose_tmp.pose.orientation.z
+            pose.pose.pose.orientation.w = pose_tmp.pose.orientation.w
 
             rospy.loginfo("Received new waypoint")
             waypoints.append(changePose(pose, "odom"))
