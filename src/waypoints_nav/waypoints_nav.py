@@ -89,7 +89,7 @@ class GetTrack(State):
             global waypoints
             while not rospy.is_shutdown():
                 data = rospy.wait_for_message('/path_reset', Empty)
-                rospy.loginfo('Recieved path RESET message')
+                rospy.loginfo('Received path RESET message')
                 self.initialize_path_queue()
                 rospy.sleep(3) # Wait 3 seconds because `rostopic echo` latches
                                # for three seconds and wait_for_message() in a
